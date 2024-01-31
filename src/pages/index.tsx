@@ -5,31 +5,31 @@ export default function Home() {
 		<div className={styles.container}>
 			<ul>
 				<li>
-					<a href="/modal">Modal</a>
+					<a href='/modal'>Modal</a>
 				</li>
 
 				<li>
-					<a href="/modal-de-confirmacao">Modal de confirmação</a>
+					<a href='/modal-de-confirmacao'>Modal de confirmação</a>
 				</li>
 
 				<li>
-					<a href="/lista">Lista</a>
+					<a href='/lista'>Lista</a>
 				</li>
 
 				<li>
-					<a href="/formulario">Formulário</a>
+					<a href='/formulario'>Formulário</a>
 				</li>
 
 				<li>
-					<a href="/context-api">Context API</a>
+					<a href='/context-api'>Context API</a>
 				</li>
 
 				<li>
-					<a href="/pagina-estatica">Pagina estática</a>
+					<a href='/pagina-estatica'>Pagina estática</a>
 				</li>
 
 				<li>
-					<a href="/ciclo-de-vida">Ciclo de vida de componente</a>
+					<a href='/ciclo-de-vida'>Ciclo de vida de componente</a>
 				</li>
 			</ul>
 		</div>

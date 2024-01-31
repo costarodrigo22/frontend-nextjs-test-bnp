@@ -7,36 +7,15 @@
  * - A página deve ser atualizada a cada 1 minuto
  */
 
-import { useEffect, useState } from 'react';
-
 import styles from '@/styles/lista.module.css';
+import { GetStaticProps } from 'next';
 import { ICity } from '@/types/city.d';
 
-export default function Lista() {
-	const [list, setUsers] = useState<Array<ICity>>([
-		{
-			id: new Date().getTime().toString(),
-			name: 'São Paulo',
-		},
-	]);
+interface ListaProps {
+	list: ICity[];
+}
 
-	async function getList() {
-		try {
-			const response = await fetch('/api/cities/10');
-			const data = await response.json();
-
-			if (!response.ok) throw new Error('Erro ao obter os dados');
-
-			setUsers(data);
-		} catch (error) {
-			console.error(error);
-		}
-	}
-
-	useEffect(() => {
-		getList();
-	}, []);
-
+export default function Lista({ list }: ListaProps) {
 	return (
 		<div className={styles.container}>
 			<div className={styles.content}>
@@ -53,3 +32,28 @@ export default function Lista() {
 		</div>
 	);
 }
+
+export const getStaticProps: GetStaticProps<ListaProps> = async () => {
+	try {
+		const response = await fetch('http://localhost:8080/api/cities/10');
+		const data: ICity[] | { error: string } = await response.json();
+
+		if (!response.ok || 'error' in data) {
+			throw new Error('Erro ao obter os dados');
+		}
+
+		return {
+			props: {
+				list: data,
+			},
+			revalidate: 60,
+		};
+	} catch (error) {
+		console.error(error);
+		return {
+			props: {
+				list: [],
+			},
+		};
+	}
+};

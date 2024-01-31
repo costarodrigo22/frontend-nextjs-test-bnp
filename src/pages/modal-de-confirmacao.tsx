@@ -9,23 +9,37 @@
  */
 
 import { useState } from 'react';
-import Head from 'next/head';
 
 import styles from '@/styles/modal.module.css';
-import { Modal } from '@/components/Modal';
+import { ModalConfirm } from '@/components/ModalConfirm';
 
 export default function Home() {
-	const [modalIsOpen, setModalIsOpen] = useState(false);
+	const [modalConfirmIsOpen, setModalConfirmIsOpen] = useState(false);
+
+	function handleModalClose() {
+		setModalConfirmIsOpen(false);
+	}
 
 	return (
 		<>
 			<main className={styles.container}>
-				<button type="button" onClick={() => setModalIsOpen(true)}>
+				<button type='button' onClick={() => setModalConfirmIsOpen(true)}>
 					Abrir modal de confirmação
 				</button>
 			</main>
 
 			{/* Renderizar modal de confirmação */}
+
+			<ModalConfirm
+				isOpen={modalConfirmIsOpen}
+				onClose={handleModalClose}
+				title='Confirmação'
+				content={
+					<div style={{ padding: 20 }}>
+						<p>Este é o conteúdo dinâmico do modal de confirmação.</p>
+					</div>
+				}
+			/>
 		</>
 	);
 }

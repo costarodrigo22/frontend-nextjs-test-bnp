@@ -50,7 +50,7 @@ export default function CicloDeVida({ initialCount }: CicloDeVidaProps) {
 	return (
 		<div className={styles.container}>
 			<div>
-				<button type="button" onClick={handleOcultCounterClick}>
+				<button type='button' onClick={handleOcultCounterClick}>
 					{showCounter ? 'Ocultar contador' : 'Mostrar contador'}
 				</button>
 
@@ -68,7 +68,9 @@ export default function CicloDeVida({ initialCount }: CicloDeVidaProps) {
 	);
 }
 
-export const getServerSideProps: GetServerSideProps<CicloDeVidaProps> = async () => {
+export const getServerSideProps: GetServerSideProps<
+	CicloDeVidaProps
+> = async () => {
 	return {
 		props: {
 			initialCount: 0,

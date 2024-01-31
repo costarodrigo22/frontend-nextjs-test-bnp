@@ -1,3 +1,4 @@
+import { useRef } from 'react';
 import styles from './style.module.css';
 
 type ModalProps = {
@@ -19,9 +20,21 @@ type ModalProps = {
 	- Ao clicar no wrapper do modal, o modal deve ser fechado, porém esta ação deve ser ignorada caso o usuário clique em qualquer elemento dentro do modal
 */
 
-export const Modal: React.FC<ModalProps> = ({ children, title, isOpen, ...props }) => {
+export const Modal: React.FC<ModalProps> = ({
+	children,
+	title,
+	isOpen,
+	...props
+}) => {
+	const modalWrapperRef = useRef<HTMLDivElement>(null);
+
 	function handleCloseClick(e: React.MouseEvent) {
-		props.onClose?.('click', e.target);
+		if (
+			modalWrapperRef.current &&
+			!modalWrapperRef.current.contains(e.target as HTMLDivElement)
+		) {
+			props.onClose?.('click', e.target);
+		}
 	}
 
 	function handleConfirmClick(e: React.MouseEvent) {
@@ -35,8 +48,13 @@ export const Modal: React.FC<ModalProps> = ({ children, title, isOpen, ...props 
 	if (!isOpen) return null;
 
 	return (
-		<div data-modal-wrapper className={styles.wrapper} onClick={handleCloseClick} onKeyDown={handleKeyDown}>
-			<div data-modal-container>
+		<div
+			data-modal-wrapper
+			className={styles.wrapper}
+			onClick={handleCloseClick}
+			onKeyDown={handleKeyDown}
+		>
+			<div ref={modalWrapperRef} data-modal-container>
 				<header data-modal-header>
 					<h2>{title}</h2>
 
@@ -53,7 +71,11 @@ export const Modal: React.FC<ModalProps> = ({ children, title, isOpen, ...props 
 							{props.footer?.cancelText ?? 'Cancelar'}
 						</button>
 
-						<button data-modal-confirm onClick={handleConfirmClick} data-type="confirm">
+						<button
+							data-modal-confirm
+							onClick={handleConfirmClick}
+							data-type='confirm'
+						>
 							{props.footer?.confirmText ?? 'Confirmar'}
 						</button>
 					</div>

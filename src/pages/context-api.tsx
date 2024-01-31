@@ -8,38 +8,37 @@
  */
 
 import styles from '@/styles/context-api.module.css';
-import { IToastMessage } from '@/types/toast-message';
 import { ToastMessage } from '@/components/ToastMessage';
+import { useToastContext } from '@/hooks/useToastContext';
 
 export default function ContextApi() {
-	const messages: Array<IToastMessage> = [
-		{
-			id: '1',
-			message: 'Mensagem de sucesso',
-			type: 'success',
-		},
-		{
-			id: '2',
-			message: 'Mensagem de erro',
-			type: 'error',
-		},
-	];
+	const { messages, handleAddToast } = useToastContext();
 
 	function handleSuccessButtonClick() {
-		alert('Method: handleSuccessButtonClick not implemented');
+		handleAddToast({
+			id: new Date().getTime().toString(),
+			message: 'Toast de sucesso',
+			type: 'success',
+			duration: 2000,
+		});
 	}
 
 	function handleErrorButtonClick() {
-		alert('Method: handleErrorButtonClick not implemented');
+		handleAddToast({
+			id: new Date().getTime().toString(),
+			message: 'Toast de error',
+			type: 'error',
+			duration: 2000,
+		});
 	}
 
 	return (
 		<>
 			<div className={styles.container}>
-				<button type="button" onClick={handleSuccessButtonClick}>
+				<button type='button' onClick={handleSuccessButtonClick}>
 					Disparar mensagem de sucesso
 				</button>
-				<button type="button" onClick={handleErrorButtonClick}>
+				<button type='button' onClick={handleErrorButtonClick}>
 					Disparar mensagem de erro
 				</button>
 			</div>
