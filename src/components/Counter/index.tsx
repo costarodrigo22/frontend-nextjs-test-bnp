@@ -10,8 +10,11 @@ export const Counter: React.FC<CounterProps> = ({ initialCount }) => {
 	useEffect(() => {
 		console.log('Componente montado!');
 
+		const event = new CustomEvent('onCounterMount');
+
 		return () => {
 			console.log('Componente desmontado!');
+			document.dispatchEvent(event);
 		};
 	}, []);
 
