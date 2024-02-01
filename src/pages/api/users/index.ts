@@ -10,12 +10,26 @@
  * - Utilize a interface IUser para tipar os dados
  */
 
-import { NextApiRequest, NextApiResponse } from 'next/types';
+import { NextApiRequest, NextApiResponse } from "next/types";
 
-import { IUser } from '@/types/user.d';
+import { IUser } from "@/types/user.d";
+import { faker } from "@faker-js/faker";
 
 export default (req: NextApiRequest, res: NextApiResponse) => {
-	const users: Array<unknown> = [];
+  if (req.method !== "GET") return res.status(405);
 
-	return res.status(500).json(users);
+  const users: Array<IUser> = [];
+
+  for (let i = 0; i < 10; i++) {
+    const firstName = faker.person.firstName();
+    const lastName = faker.person.lastName();
+
+    users.push({
+      id: faker.number.int(),
+      name: faker.person.fullName({ firstName, lastName }),
+      email: faker.internet.email({ firstName, lastName }),
+    });
+  }
+
+  return res.status(200).json(users);
 };

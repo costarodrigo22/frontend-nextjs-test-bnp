@@ -10,12 +10,27 @@
  * - Você deve corrigir a interface IUserCreate em src/types/user.d.ts
  */
 
-import { NextApiRequest, NextApiResponse } from 'next/types';
+import { NextApiRequest, NextApiResponse } from "next/types";
 
-import { IUser, IUserCreate } from '@/types/user.d';
+import { IUser, IUserCreate } from "@/types/user.d";
+import { faker } from "@faker-js/faker";
 
 const users: IUser[] = [];
 
 export default (req: NextApiRequest, res: NextApiResponse) => {
-	return res.status(400).json(undefined);
+  if (req.method !== "POST") return res.status(405);
+
+  const body: IUserCreate = req.body;
+
+  if (!body.name || !body.email) return res.status(400);
+
+  const id = faker.number.int();
+
+  users.push({
+    id: id,
+    name: body.name,
+    email: body.email,
+  });
+
+  return res.status(200).json(undefined);
 };
