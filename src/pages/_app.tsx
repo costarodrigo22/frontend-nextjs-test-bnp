@@ -3,6 +3,7 @@ import Head from 'next/head';
 
 import '@/styles/globals.css';
 import { ToastProvider } from '@/context/Toasts';
+import { ToastContainer } from '@/components/ToastContainer';
 
 export default function App({ Component, pageProps }: AppProps) {
 	return (
@@ -10,6 +11,8 @@ export default function App({ Component, pageProps }: AppProps) {
 			<Head>
 				<title>Teste Front-End - BNP</title>
 			</Head>
+
+			<ToastContainer />
 
 			<Component {...pageProps} />
 		</ToastProvider>

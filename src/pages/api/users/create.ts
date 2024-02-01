@@ -1,5 +1,5 @@
 /**
- * @api {get} /api/users/create Create User
+ * @api {post} /api/users/create Create User
  *
  * Resolva o exercício aqui:
  *
@@ -10,27 +10,33 @@
  * - Você deve corrigir a interface IUserCreate em src/types/user.d.ts
  */
 
-import { NextApiRequest, NextApiResponse } from "next/types";
+import { NextApiRequest, NextApiResponse } from 'next/types';
 
-import { IUser, IUserCreate } from "@/types/user.d";
-import { faker } from "@faker-js/faker";
+import { IUser, IUserCreate } from '@/types/user.d';
+import { faker } from '@faker-js/faker';
 
 const users: IUser[] = [];
 
-export default (req: NextApiRequest, res: NextApiResponse) => {
-  if (req.method !== "POST") return res.status(405);
+export default async (req: NextApiRequest, res: NextApiResponse) => {
+	if (req.method !== 'POST')
+		return res.status(405).json({ message: 'Método HTTP não permitido!' });
 
-  const body: IUserCreate = req.body;
+	const body: IUserCreate = JSON.parse(req.body);
 
-  if (!body.name || !body.email) return res.status(400);
+	if (!body.name && !body.email)
+		return res
+			.status(400)
+			.json({ message: 'Necessário preenchimento dos dados!' });
 
-  const id = faker.number.int();
+	const id = faker.number.int();
 
-  users.push({
-    id: id,
-    name: body.name,
-    email: body.email,
-  });
+	users.push({
+		id,
+		name: body.name,
+		email: body.email,
+	});
 
-  return res.status(200).json(undefined);
+	// throw new Error('Erro ao obter os dados');
+
+	return res.status(200).json({ message: 'Usuário criado com sucesso!' });
 };

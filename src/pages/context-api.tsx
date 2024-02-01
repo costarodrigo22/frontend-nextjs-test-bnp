@@ -8,15 +8,15 @@
  */
 
 import styles from '@/styles/context-api.module.css';
-import { ToastMessage } from '@/components/ToastMessage';
 import { useToastContext } from '@/hooks/useToastContext';
+import { faker } from '@faker-js/faker';
 
 export default function ContextApi() {
-	const { messages, handleAddToast } = useToastContext();
+	const { handleAddToast } = useToastContext();
 
 	function handleSuccessButtonClick() {
 		handleAddToast({
-			id: new Date().getTime().toString(),
+			id: faker.string.uuid(),
 			message: 'Toast de sucesso',
 			type: 'success',
 			duration: 2000,
@@ -25,7 +25,7 @@ export default function ContextApi() {
 
 	function handleErrorButtonClick() {
 		handleAddToast({
-			id: new Date().getTime().toString(),
+			id: faker.string.uuid(),
 			message: 'Toast de error',
 			type: 'error',
 			duration: 2000,
@@ -41,12 +41,6 @@ export default function ContextApi() {
 				<button type='button' onClick={handleErrorButtonClick}>
 					Disparar mensagem de erro
 				</button>
-			</div>
-
-			<div className={styles['toast-container']}>
-				{messages.map((message) => (
-					<ToastMessage key={message.id} content={message} />
-				))}
 			</div>
 		</>
 	);

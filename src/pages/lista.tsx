@@ -6,48 +6,100 @@
  * - Renderizar a lista de usuários
  */
 
-import { use, useEffect, useState } from "react";
+import { useEffect, useState } from 'react';
 
-import styles from "@/styles/lista.module.css";
-import { IUser } from "@/types/user";
+import styles from '@/styles/lista.module.css';
+import { IUser } from '@/types/user';
+import { useToastContext } from '@/hooks/useToastContext';
+import { faker } from '@faker-js/faker';
+import ContentLoader from 'react-content-loader';
 
 export default function Lista() {
-  const [users, setUsers] = useState<Array<IUser>>([]);
+	const [users, setUsers] = useState<Array<IUser>>([]);
+	const [loading, setLoading] = useState(true);
+	const [hasError, setHasError] = useState(false);
 
-  async function getUsersList() {
-    try {
-      const response = await fetch("/api/users");
-      const data = await response.json();
+	const { handleAddToast } = useToastContext();
 
-      console.log(data);
+	function handleTryAgain() {
+		getUsersList();
+	}
 
-      if (!response.ok) throw new Error("Erro ao obter os dados");
+	async function getUsersList() {
+		try {
+			const response = await fetch('/api/users');
+			const data = await response.json();
 
-      setUsers(data);
-    } catch (error) {
-      console.error(error);
-    }
-  }
+			// throw new Error('Erro ao obter os dados');
 
-  useEffect(() => {
-    getUsersList();
-  }, []);
+			setHasError(false);
+			setUsers(data);
+		} catch {
+			setHasError(true);
 
-  return (
-    <div className={styles.container}>
-      <div className={styles.content}>
-        <h2>Lista de usuários</h2>
+			handleAddToast({
+				id: faker.string.uuid(),
+				message: 'Opa! Algo deu errado ao listar os dados.',
+				type: 'error',
+				duration: 2000,
+			});
+		} finally {
+			setLoading(false);
+		}
+	}
 
-        <div data-list-container>
-          {/* Exemplo */}
-          {users.map((item) => (
-            <div data-list-item key={item.id}>
-              <span>{item.name}</span>
-              <span>{item.email}</span>
-            </div>
-          ))}
-        </div>
-      </div>
-    </div>
-  );
+	useEffect(() => {
+		getUsersList();
+	}, []);
+
+	return (
+		<div className={styles.container}>
+			<div className={styles.content}>
+				<h2>Lista de usuários</h2>
+
+				{hasError && (
+					<div data-eror>
+						<span style={{ color: '#c04848' }}>
+							Ocorreu um erro ao listar os usuários ;(
+						</span>
+
+						<button onClick={handleTryAgain}>Recarregar</button>
+					</div>
+				)}
+
+				{loading && (
+					<ContentLoader
+						width={400}
+						height={180}
+						backgroundColor='#ababab'
+						foregroundColor='#fafafa'
+					>
+						<rect x='0' y='15' rx='5' ry='5' width='300' height='15' />
+						<rect x='0' y='35' rx='5' ry='5' width='250' height='15' />
+
+						<rect x='0' y='65' rx='5' ry='5' width='300' height='15' />
+						<rect x='0' y='85' rx='5' ry='5' width='250' height='15' />
+
+						<rect x='0' y='115' rx='5' ry='5' width='300' height='15' />
+						<rect x='0' y='135' rx='5' ry='5' width='250' height='15' />
+					</ContentLoader>
+				)}
+
+				{!loading && !hasError && (
+					<div data-list-container>
+						{users.map((item) => (
+							<div data-list-item key={item.id}>
+								<span>
+									<strong>Nome:</strong> {item.name}
+								</span>
+								<span>
+									<strong>E-mail:</strong> {item.email}
+								</span>
+							</div>
+						))}
+					</div>
+				)}
+			</div>
+		</div>
+	);
 }
